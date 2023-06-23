@@ -113,4 +113,111 @@ tail property on the list to be the newly created node
         return this;
     }
 
+/* GET
+-- accept an index
+-- if index is < 0 or >= length, return null
+-- loop through list until index is reached and return the node at that index
+*/
+
+    get(idx) {
+        if (idx < 0 || idx >= this.length) return null;
+        let counter = 0;
+        let current = this.head;
+        while (counter !== idx) {
+            current = current.next;
+            counter++;
+        }
+        return current;
+    }
+
+/* SET
+-- accept a value and an index
+-- use get() to find the specific node
+-- if the node is not found, return false
+-- if the node is found, set the value of that node to the value passed to the function and return true
+*/
+
+    set(idx, val) {
+        foundNode = this.get(idx);
+        if (foundNode) {
+            foundNode.val = val;
+            return true;
+        }
+        return false;
+    }
+
+/* INSERT
+-- if index is < 0 or > length, return false
+-- if index = length, push() a new node
+-- if index = 0, unshift() a new node
+-- otherwise, use get() to access index - 1
+-- set the next prop on that node to be the new node
+-- set the next prop on the new node to be the previous next
+-- increment the length
+-- return true
+*/
+
+    insert(idx, val) {
+        if (idx < 0 || idx > this.length) return false;
+        if (idx === this.length) return this.push(val);
+        if (idx === 0) return this.unshift(val);
+       
+        newNode = new Node(val);
+        let prev = this.get(idx - 1);
+        let temp = prev.next;
+        prev.next = newNode;
+        newNode.next = temp;
+        this.length++;
+        return true;
+    }
+
+/* REMOVE
+-- if index is < 0 or > length, return undefined
+-- if index = length -1, pop()
+-- if index = 0, shift()
+-- otherwise, use get() to access index - 1
+-- set the next prop on that node to be the next of the next node
+-- decrement the length
+-- return value of removed node
+*/
+
+    remove(idx) {
+        if (idx < 0 || idx >= this.length) return undefined;
+        if (idx === 0) return this.shift();
+        if (idx === this.length - 1) return this.pop();
+
+        let prevNode = this.get(idx - 1);
+        let removed = prevNode.next;
+        prevNode.next = removed.next;
+        this.length--;
+        return removed;
+    }
+
+/* REVERSE
+-- swap the head and tail
+-- create a var called next
+-- create a var called prev
+-- create a var called node and initialize it to the head prop
+-- loop through the list
+-- set next to be the next prop on whatever node is
+-- set the next prop on the node to be whatever prev is
+-- set prev to be the value of the node var
+-- set the node var to be the value of the next var
+*/
+
+    reverse() {
+        let node = this.head;
+        this.head = this.tail;
+        this.tail = node;
+        let prev = null;
+        let next = null;
+
+        for (let i = 0; i < this.length; i++) {
+            next = node.next;
+            node.next = prev;
+            prev = node;
+            node = next;
+        }
+        return this;
+    }
 }
